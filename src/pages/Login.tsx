@@ -52,7 +52,7 @@ export const Login: React.FC = () => {
         dispatch({ type: 'SET_USER', payload: result.data.user });
         dispatch({ type: 'SET_AUTHENTICATED', payload: true });
         toast.success(strings.loginSuccess);
-        navigate('/');
+        navigate('/dashboard');
       } else {
         toast.error(result.error || strings.loginError);
       }

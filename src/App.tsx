@@ -6,7 +6,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { Toaster as HotToaster } from 'react-hot-toast';
 import { AppProvider } from './context/AppContext';
 import { ProtectedRoute } from './components/common/ProtectedRoute';
-import Index from "./pages/Index";
+import Dashboard from "./pages/Dashboard";
 import NotFound from "./pages/NotFound";
 import { Login } from "./pages/Login";
 import { ForgotPassword } from "./pages/ForgotPassword";
@@ -37,7 +37,8 @@ const App = () => (
           <Routes>
             <Route path="/login" element={<Login />} />
             <Route path="/forgot-password" element={<ForgotPassword />} />
-            <Route path="/" element={<ProtectedRoute><Index /></ProtectedRoute>} />
+            <Route path="/" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
+            <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
             <Route path="/chat" element={<ProtectedRoute><ChatAgent /></ProtectedRoute>} />
             <Route path="/tasks" element={<ProtectedRoute><TasksKanban /></ProtectedRoute>} />
             <Route path="/files" element={<ProtectedRoute><FilesPage /></ProtectedRoute>} />
