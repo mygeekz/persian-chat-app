@@ -9,6 +9,7 @@ export default {
 		"./src/**/*.{ts,tsx}",
 	],
 	prefix: "",
+	important: true,
 	theme: {
 		container: {
 			center: true,
@@ -18,6 +19,13 @@ export default {
 			}
 		},
 		extend: {
+			fontFamily: {
+				'vazir': ['Vazirmatn', 'sans-serif'],
+			},
+			direction: {
+				'rtl': 'rtl',
+				'ltr': 'ltr',
+			},
 			colors: {
 				border: 'hsl(var(--border))',
 				input: 'hsl(var(--input))',
