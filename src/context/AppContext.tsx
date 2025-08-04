@@ -1,4 +1,5 @@
-import React, { createContext, useContext, useReducer, ReactNode } from 'react';
+import React, { createContext, useContext, useReducer, ReactNode, useEffect } from 'react';
+import { authApi } from '@/utils/api';
 
 export interface User {
   id: string;
@@ -128,6 +129,24 @@ const AppContext = createContext<AppContextType | undefined>(undefined);
 
 export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [state, dispatch] = useReducer(appReducer, initialState);
+
+  useEffect(() => {
+    const checkUser = async () => {
+      const token = localStorage.getItem('agent_token');
+      if (token) {
+        dispatch({ type: 'SET_LOADING', payload: true });
+        const res = await authApi.getProfile();
+        if (res.success && res.data) {
+          dispatch({ type: 'SET_USER', payload: res.data });
+          dispatch({ type: 'SET_AUTHENTICATED', payload: true });
+        } else {
+          localStorage.removeItem('agent_token');
+        }
+        dispatch({ type: 'SET_LOADING', payload: false });
+      }
+    };
+    checkUser();
+  }, []);
 
   return (
     <AppContext.Provider value={{ state, dispatch }}>

@@ -20,7 +20,6 @@ interface SidebarProps {
 }
 
 const navigation = [
-  { name: strings.dashboard, href: '/', icon: HomeIcon },
   { name: strings.chatAgent, href: '/chat', icon: ChatBubbleLeftRightIcon },
   { name: strings.tasks, href: '/tasks', icon: CheckCircleIcon },
   { name: strings.files, href: '/files', icon: DocumentIcon },

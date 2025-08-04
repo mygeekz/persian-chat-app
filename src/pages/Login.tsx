@@ -48,7 +48,7 @@ export const Login: React.FC = () => {
       const result = await authApi.login(formData.email, formData.password);
       
       if (result.success && result.data) {
-        localStorage.setItem('jwt_token', result.data.token);
+        localStorage.setItem('agent_token', result.data.token);
         dispatch({ type: 'SET_USER', payload: result.data.user });
         dispatch({ type: 'SET_AUTHENTICATED', payload: true });
         toast.success(strings.loginSuccess);
