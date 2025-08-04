@@ -19,7 +19,7 @@ export const TopBar: React.FC<TopBarProps> = ({ onToggleSidebar }) => {
   const { state, dispatch } = useAppContext();
 
   const handleLogout = () => {
-    localStorage.removeItem('jwt_token');
+    localStorage.removeItem('agent_token');
     dispatch({ type: 'SET_USER', payload: null });
     dispatch({ type: 'SET_AUTHENTICATED', payload: false });
   };

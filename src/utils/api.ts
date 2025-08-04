@@ -16,7 +16,7 @@ class ApiClient {
   }
 
   private getAuthHeaders(): Record<string, string> {
-    const token = localStorage.getItem('jwt_token');
+    const token = localStorage.getItem('agent_token');
     return {
       'Content-Type': 'application/json',
       ...(token && { 'Authorization': `Bearer ${token}` })
@@ -29,7 +29,7 @@ class ApiClient {
       
       if (!response.ok) {
         if (response.status === 401) {
-          localStorage.removeItem('jwt_token');
+          localStorage.removeItem('agent_token');
           window.location.href = '/login';
           return { success: false, error: 'غیر مجاز' };
         }
@@ -56,7 +56,7 @@ class ApiClient {
     }
   }
 
-  async post<T>(endpoint: string, data?: any): Promise<ApiResponse<T>> {
+  async post<T>(endpoint: string, data?: unknown): Promise<ApiResponse<T>> {
     try {
       const response = await fetch(`${this.baseURL}${endpoint}`, {
         method: 'POST',
@@ -71,7 +71,7 @@ class ApiClient {
     }
   }
 
-  async put<T>(endpoint: string, data?: any): Promise<ApiResponse<T>> {
+  async put<T>(endpoint:string, data?: unknown): Promise<ApiResponse<T>> {
     try {
       const response = await fetch(`${this.baseURL}${endpoint}`, {
         method: 'PUT',
@@ -105,7 +105,7 @@ class ApiClient {
       const formData = new FormData();
       formData.append('file', file);
 
-      const token = localStorage.getItem('jwt_token');
+      const token = localStorage.getItem('agent_token');
       const headers: Record<string, string> = {};
       if (token) {
         headers['Authorization'] = `Bearer ${token}`;
@@ -127,10 +127,15 @@ class ApiClient {
 
 export const apiClient = new ApiClient(API_BASE_URL);
 
+import { User, ChatMessage, Task, FileItem } from '@/context/AppContext';
+
 // Auth API
 export const authApi = {
   login: (email: string, password: string) =>
-    apiClient.post<{ token: string; user: any }>('/auth/login', { email, password }),
+    apiClient.post<{ token: string; user: User }>('/auth/login', { email, password }),
+
+  getProfile: () =>
+    apiClient.get<User>('/auth/me'),
   
   forgotPassword: (email: string) =>
     apiClient.post('/auth/forgot-password', { email }),
@@ -151,19 +156,19 @@ export const chatApi = {
     apiClient.post<{ response: string; source: string }>('/chat', { message }),
   
   getHistory: () =>
-    apiClient.get<any[]>('/chat/history')
+    apiClient.get<ChatMessage[]>('/chat/history')
 };
 
 // Tasks API
 export const tasksApi = {
   getTasks: () =>
-    apiClient.get<any[]>('/tasks'),
+    apiClient.get<Task[]>('/tasks'),
   
   createTask: (task: { title: string; description: string; status: string }) =>
-    apiClient.post<any>('/tasks', task),
+    apiClient.post<Task>('/tasks', task),
   
-  updateTask: (id: string, task: any) =>
-    apiClient.put<any>(`/tasks/${id}`, task),
+  updateTask: (id: string, task: Partial<Task>) =>
+    apiClient.put<Task>(`/tasks/${id}`, task),
   
   deleteTask: (id: string) =>
     apiClient.delete(`/tasks/${id}`)
@@ -172,10 +177,10 @@ export const tasksApi = {
 // Files API
 export const filesApi = {
   getFiles: () =>
-    apiClient.get<any[]>('/files'),
+    apiClient.get<FileItem[]>('/files'),
   
   uploadFile: (file: File) =>
-    apiClient.upload<any>('/files/upload', file),
+    apiClient.upload<FileItem>('/files/upload', file),
   
   deleteFile: (id: string) =>
     apiClient.delete(`/files/${id}`)
